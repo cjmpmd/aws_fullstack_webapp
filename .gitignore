@@ -21,5 +21,6 @@ Homestead.yaml
 Homestead.json
 /.vagrant
 .phpunit.result.cache
-# /DAC/*.png
+/DAC/TemplateArchitectureDiagram.*
 /DAC/diagram.template.txt
+/README secondary.md
