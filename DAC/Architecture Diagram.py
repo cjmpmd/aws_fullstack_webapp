@@ -21,27 +21,27 @@ def worker(x):
     return wrk
 
 
-with Diagram("Refactor App", show=False):
+# with Diagram("Refactor App", show=False):
 
-    rtr = Router('Router')
-    fw = Firewall('FW')
-    # lb = ELB('LB')
-    vm = Virtualbox('Hypervisor t-1')
+#     rtr = Router('Router')
+#     fw = Firewall('FW')
+#     # lb = ELB('LB')
+#     vm = Virtualbox('Hypervisor t-1')
 
-    with Cluster("Virtual Machine"):
-        with Cluster("Services"):
-            workers = Ubuntu('OS')
-        with Cluster("DB"):
-            db = MySQL('State')
-        with Cluster("File Storage"):
-            storage = CEPH_OSD('Storage')
+#     with Cluster("Virtual Machine"):
+#         with Cluster("Services"):
+#             workers = Ubuntu('OS')
+#         with Cluster("DB"):
+#             db = MySQL('State')
+#         with Cluster("File Storage"):
+#             storage = CEPH_OSD('Storage')
             
 
 
-    rtr >> fw >> vm >> workers >> db
-    workers >> storage
-    db >> workers
-    storage >> workers
+#     rtr >> fw >> vm >> workers >> db
+#     workers >> storage
+#     db >> workers
+#     storage >> workers
 
 
 with Diagram("Full Stack Web Architecture", show=False):
