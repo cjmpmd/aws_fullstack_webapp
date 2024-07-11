@@ -1,11 +1,11 @@
-# Bugs/Fixes
-# MVP
+## Bugs/Fixes
+## MVP
 #### Initial Repos
 - [x] Webb App Repo
-- [ ] Full Stack Repo
+- [x] Full Stack Repo
 - [ ] Automation Repo
 #### Initial Architecture
-# Components
+## Components
 #### Web App
 - [ ] Add admin section
 - [ ] Add user section
@@ -13,7 +13,7 @@
 - [ ] Create API
 #### Mobile (?)
 #### Database
-- [ ]
+- [ ] Deploy RDBMS instance
 #### Automation
 #### AutoScale
 #### Vault
@@ -21,10 +21,13 @@
 - [ ] Configure secrets and vault
 #### CloudWatch
 #### CloudTrail
-# Documentation
+#### K8
+## Documentation
 #### Repos Docs
 - [ ] Include documentation for submodules
-# Report
+- [x] Include diagram architecture file
+- [ ] Include steps for diagrams in windows
+## Report
 #### Deliverable: Main goals
 - [ ] Linux-based web server with the Autoscale service
 - [ ] maximum requirement of 6 servers and a minimum requirement of 2 servers
