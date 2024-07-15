@@ -8,8 +8,11 @@ from diagrams.aws.general import InternetGateway as gIG
 
 
 from diagrams.onprem.monitoring import Grafana, Prometheus
+from diagrams.onprem.network import Apache, Nginx
 
 from diagrams.aws.management import AutoScaling
+
+
 
 
 
@@ -19,6 +22,7 @@ from diagrams.programming.framework import Laravel
 from diagrams.onprem.database import MySQL
 from diagrams.onprem.storage import CEPH_OSD
 from diagrams.onprem.compute import Server
+from diagrams.onprem.vcs import Github
 
 
 from diagrams.generic.virtualization import Virtualbox
@@ -26,8 +30,6 @@ from diagrams.generic.os import Ubuntu
 
 
 from diagrams.generic.network import Firewall, Router
-import prometheus_client
-
 def nameSpace(index):
     
     if index < 0:
@@ -69,6 +71,8 @@ with Diagram("Full Stack Web Architecture", show=False):
     
     internet = gIG('internet')
     dns = Route53('DNS Service')
+    
+    git = Github('Repo')
     with Cluster("VPC"):
         igw = InternetGateway('IGW')
         with Cluster("Public Network"):
@@ -98,10 +102,12 @@ with Diagram("Full Stack Web Architecture", show=False):
                 metrics << Edge(color="firebrick", style="dashed") << Grafana("monitoring")
             
         ubu = Ubuntu('Template')
+        ubu  << Apache('') << Nginx('') << Laravel('App') << git
         
     with Cluster('On prem'):
         lrvl = Laravel('App')
         OnPremServ = Server('API')
+        
     AMI << ubu
 
             
