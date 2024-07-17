@@ -9,7 +9,7 @@ from diagrams.onprem.monitoring import Grafana, Prometheus
 from diagrams.onprem.network import Apache, Nginx
 from diagrams.onprem.database import MySQL
 from diagrams.onprem.compute import Server
-from diagrams.onprem.vcs import Github
+from diagrams.onprem.vcs import Gitlab, Github
 
 from diagrams.programming.framework import Laravel
 
@@ -31,13 +31,13 @@ with Diagram("Full Stack Web Architecture", show=False):
         igw = InternetGateway('IGW')
         with Cluster("Public Network"):
             aLB = ELB('Application LB')
-            with Cluster("ASG \n (Total workers: n > 1 < 7)"):
+            with Cluster("ASG"):
                 AMI = AMI('Template')
-                with Cluster("Service Cluster"):
+                with Cluster("Service Cluster \n (Total workers: n > 1 < 7)"):
                     ec2 = [
-                        EC2('Worker'),
-                        EC2('Worker'),
-                        EC2('Worker'),
+                        EC2('Worker 6'),
+                        EC2('Worker (n)'),
+                        EC2('Worker 1'),
                         
                     ]
                 ASG = AutoScaling('ASG')
@@ -47,27 +47,36 @@ with Diagram("Full Stack Web Architecture", show=False):
             apiGW = APIGateway('API GW')
             with Cluster("DB Cluster"):
                 CDB = [
-                    EC2Instance('DB Slave #1'),
+                    MySQL('DB Master')
+                    
                     # EC2Instance('DB Slave #1'),
                 ]
-                mDB = MySQL('DB Master')
-                mDB >> CDB
-            with Cluster("Monitoring"):
-                metrics = Prometheus("metric")
-                metrics << Edge(color="firebrick", style="dashed") << Grafana("monitoring")
+                mDB = EC2Instance('DB Slave #1')
+                mDB << CDB
+            # with Cluster("Monitoring"):
+            #     metrics = Prometheus("metric")
+            #     metrics << Edge(color="firebrick", style="dashed") << Grafana("monitoring")
             
         # ubu  << Apache('') << Nginx('') << Laravel('App') << git
     
     
-    with Cluster('Tech Stack'):
-        ubu = Ubuntu('Template')
-        # git = Github('Repo')
-        ubu  << Nginx('') << Laravel('App') \
-            #  << git
-        
     with Cluster('On prem'):
-        OnPremServ = Server('API')
-        lrvl = Laravel('App')
+        with Cluster('API'):
+            OnPremServ = Server('API')
+            lrvl = Laravel('API')
+        with Cluster('Tech Stack'):
+            ubu = Ubuntu('Template')
+            # git = Github('Repo')
+            site = Laravel('Web site') 
+            ubu  << Nginx('') << site
+                
+        with Cluster('VCS'):
+            Repo = [
+                # Gitlab('Internal VCS'),
+                Github('External VCS'),
+            ]
+
+        
         
 
                
@@ -77,19 +86,46 @@ with Diagram("Full Stack Web Architecture", show=False):
     aLB >> ASG  >> AMI
     ASG >> ec2
     AMI >> ec2
-    AMI << ubu
+    ec2 << ubu
     ec2 >> nLB
     # nLB >> mDB
     nLB >> apiGW
+    nLB >> mDB
     apiGW >> s3
-    apiGW >> mDB
-    apiGW >> metrics
-    apiGW - OnPremServ << lrvl
+    # apiGW >> mDB
+    # apiGW >> metrics
+    ec2 - OnPremServ << lrvl 
+    lrvl << Repo
+    site << Repo
     
 
 with Diagram("WebApp Architecture", show=False):
 
     lrvl = Laravel('App')
+    with Cluster('DevCycle'):
+        site = [
+            Server('Prod'),
+            Server('Test'),
+            Server('Dev'),
+        ]
+    with Cluster('MVC Architecture'):
+        arch = Server('')
+    with Cluster('Workflow'):
+        with Cluster('Auth'):
+            reg = Server('Register')
+            login = Server('Login') 
+            workflow = login - reg
+        with Cluster('User'):
+            acc = Server('Account') 
+            rsm = Server('rsm') 
+            hist = Server('history') 
+    with Cluster('Controller'):
+        with Cluster('Database'):
+            db = MySQL('DB')
+        with Cluster('Storage'):
+            storage = MySQL('DB')
+
+
     # lb = ELB('LB')
     # source = EKS("k8s source")
 
@@ -98,4 +134,10 @@ with Diagram("WebApp Architecture", show=False):
     #         workers = worker(1)
 
 
-    lrvl 
+    lrvl >> site >> arch
+    arch >> login
+    arch << db
+    arch << storage
+    login >> rsm
+    rsm - acc
+    rsm - hist
