@@ -27,6 +27,10 @@ with Diagram("Full Stack Web Architecture", show=False):
 # with Diagram("Full Stack Web Architecture", show=False, direction="TB"):
     internet = gIG('internet')
     dns = Route53('DNS Service')
+    with Cluster("Security VPC"):
+        igwSec = InternetGateway('IGW')
+        with Cluster("Public Network"):
+            basti = EC2Instance('Bastion Host')
     with Cluster("VPC"):
         igw = InternetGateway('IGW')
         with Cluster("Public Network"):
@@ -82,6 +86,11 @@ with Diagram("Full Stack Web Architecture", show=False):
                
 
     internet >> dns
+    igwSec >> basti 
+    # basti >> aLB
+    basti >> ec2
+    basti >> mDB
+
     dns >> igw >> aLB 
     aLB >> ASG  >> AMI
     ASG >> ec2
