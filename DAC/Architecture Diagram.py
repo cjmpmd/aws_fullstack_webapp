@@ -1,6 +1,6 @@
 from diagrams import Cluster, Diagram
 from diagrams.aws.compute import EC2Instance, AMI, EC2
-from diagrams.aws.network import Route53, ELB, InternetGateway
+from diagrams.aws.network import NATGateway, ELB, InternetGateway
 from diagrams.aws.general import InternetGateway as gIG
 from diagrams.aws.management import AutoScaling
 
@@ -18,17 +18,13 @@ with Diagram("Full Stack Web Architecture", show=False):
             igw = InternetGateway('IGW')
             with Cluster("Public Network"):
                 aLB = ELB('Application LB')
-                with Cluster("ASG"):
-                    AMI = AMI('AMI Image')
-                    with Cluster("Service Cluster \n (Total workers: n > 2 < 7)"):
-                        ec2 = [
-                            EC2('Worker 6'),
-                            EC2('Worker (n)'),
-                            EC2('Worker 1'),
-                            
-                        ]
-                    ASG = AutoScaling('ASG')
-            # nLB = ELB('Network LB')
+                with Cluster("Service Cluster \n (Total workers: n > 2 < 7)"):
+                    ec2 = [
+                        EC2('Worker (n)'),
+                        EC2('Worker (n)')
+                    ]
+                    sCluster =EC2Instance('DB Slave #1')
+                    
             with Cluster("Private Network"):
                 with Cluster("DB Cluster"):
                     CDB = [
@@ -36,6 +32,10 @@ with Diagram("Full Stack Web Architecture", show=False):
                                         ]
                     mDB = EC2Instance('DB Slave #1')
                     mDB << CDB
+        with Cluster("ASG"):
+            AMI = AMI('AMI Image')
+            ASG = AutoScaling('ASG')
+            # nLB = ELB('Network LB')
                     
     internet >> igw
     internet >> igwSec >> basti 
@@ -43,8 +43,9 @@ with Diagram("Full Stack Web Architecture", show=False):
     basti >> mDB
 
     igw >> aLB 
-    aLB >> ASG  >> AMI
-    ASG >> ec2
-    AMI >> ec2
+    ASG  >> AMI
+    aLB >> ec2
+    sCluster >> ec2
+    AMI >> sCluster
     ec2 >> mDB
     

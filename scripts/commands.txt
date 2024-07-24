@@ -1,0 +1,6 @@
+
+sudo chmod +x apache.sh ./apache.sh 
+sudo chmod +x config.sh ./config.sh
+sudo chmod +x laravel.sh ./laravel.sh 
+
+sudo chmod +x apache.sh config.sh laravel.sh
