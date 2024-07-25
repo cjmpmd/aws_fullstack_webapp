@@ -46,9 +46,9 @@
 - [x] Video of successful implementation
 - [x] Show voice
 #### Deliverable 3: PPT
-- [ ] 10-15 mins
-- [ ] Add infrastructure
-- [ ] Add why web app chosen
-- [ ] Add dependencies (if api, for instance python)
+- [x] 10-15 mins
+- [x] Add infrastructure
+- [x] Add why web app chosen
+- [x] Add dependencies (if api, for instance python)
 #### Deliverable 4: Table
 - [x] Allocate AWS services used in a table (CHECK THE ASSIGMENT POST)
