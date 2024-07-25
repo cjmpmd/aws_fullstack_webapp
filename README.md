@@ -1,6 +1,8 @@
 ## AWS Fullstack Web App
 The final project for the AWS course is to deploy a fullstack cloud native web app with specific [requirements (checklist can be found here)](./Checklist.md).
 
+The application will run LAMP tech stack, with Laravel. UI includes Bootstrap 5 and ChartJS.
+
 Cloud Architecture
 The following is the proposed architecture and devices required for the web app deployment:
 ![Cloud Architecture](./DAC/full_stack_web_architecture.png)
